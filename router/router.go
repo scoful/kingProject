@@ -16,7 +16,7 @@ func init() {
         ctlCron := new(cron.C)
         ctlGithub := new(github.C)
 
-        // 定时提醒
+        // 一次性定时提醒
         group.GET("/getAllCron", ctlCron, "GetAllCron")
         group.POST("/addCron", ctlCron, "AddCron")
         group.DELETE("/deleteCron", ctlCron, "DeleteCron")

@@ -1,7 +1,6 @@
 package utils
 
 import (
-    "fmt"
     "github.com/gogf/gf/encoding/gurl"
     "github.com/gogf/gf/frame/g"
     "github.com/gogf/gf/text/gstr"
@@ -14,7 +13,7 @@ func SendWechat(content string) {
         panic(err)
     } else {
         defer r.Close()
-        fmt.Println(r.ReadAllString())
+        g.Log().Info(r.ReadAllString())
     }
 }
 
@@ -29,6 +28,6 @@ func SendDingDing(content string) {
         panic(err)
     } else {
         defer r.Close()
-        fmt.Println(r.ReadAllString())
+        g.Log().Info(r.ReadAllString())
     }
 }

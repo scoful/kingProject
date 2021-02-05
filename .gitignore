@@ -1,0 +1,5 @@
+main.exe
+go.sum
+/log/
+/.idea/
+*.log
