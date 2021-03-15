@@ -17,6 +17,7 @@ func (c *C) HandleGithubWebhook(r *ghttp.Request) {
     if j, err := gjson.DecodeToJson(r.GetBodyString()); err != nil {
         panic(err)
     } else {
+        g.Log().Info(r.GetBodyString())
         action := j.GetString("action")
         // ping判断
         zen := j.GetJson("zen")
@@ -32,6 +33,24 @@ func (c *C) HandleGithubWebhook(r *ghttp.Request) {
         pusher := j.GetJson("pusher")
         if !pusher.IsNil() {
             action = "push"
+        }
+        // 打tag判断
+        refType := j.GetString("ref_type")
+        if refType == "tag" {
+            action = "tag"
+        }
+        // create release判断
+        release := j.GetJson("release")
+        if action == "created" && !release.IsNil() {
+            action = "createdRelease"
+        }
+        // published release 判断
+        if action == "published" && !release.IsNil() {
+            action = "publishedRelease"
+        }
+        // released release 判断
+        if action == "released" && !release.IsNil() {
+            action = "releasedRelease"
         }
         // 通用
         sender := j.GetJson("sender")
@@ -66,6 +85,36 @@ func (c *C) HandleGithubWebhook(r *ghttp.Request) {
             g.Log().Info(wechatContent)
         case action == "ping":
             wechatContent := gstr.Join([]string{repositoryName, " 成功接入了事件通知\n操作者：", login, "\n", gtime.Now().String()}, "")
+            utils.SendWechat(wechatContent)
+            dingdingContent := `{"msgtype":"text","text":{"content":"来自云空\n` + wechatContent + ` "}}`
+            utils.SendDingDing(dingdingContent)
+            g.Log().Info(wechatContent)
+        case action == "tag":
+            wechatContent := gstr.Join([]string{repositoryName, " 被打了tag ", j.GetString("ref"), "\n操作者：", login, "\n", gtime.Now().String()}, "")
+            utils.SendWechat(wechatContent)
+            dingdingContent := `{"msgtype":"text","text":{"content":"来自云空\n` + wechatContent + ` "}}`
+            utils.SendDingDing(dingdingContent)
+            g.Log().Info(wechatContent)
+        case action == "createdRelease":
+            wechatContent := gstr.Join([]string{repositoryName, " 被创建了release\n操作者：", login, "\n", gtime.Now().String()}, "")
+            utils.SendWechat(wechatContent)
+            dingdingContent := `{"msgtype":"text","text":{"content":"来自云空\n` + wechatContent + ` "}}`
+            utils.SendDingDing(dingdingContent)
+            g.Log().Info(wechatContent)
+        case action == "publishedRelease":
+            wechatContent := gstr.Join([]string{repositoryName, " 被公布了release\n操作者：", login, "\n", gtime.Now().String()}, "")
+            utils.SendWechat(wechatContent)
+            dingdingContent := `{"msgtype":"text","text":{"content":"来自云空\n` + wechatContent + ` "}}`
+            utils.SendDingDing(dingdingContent)
+            g.Log().Info(wechatContent)
+        case action == "releasedRelease":
+            wechatContent := gstr.Join([]string{repositoryName, " 被发布了release\n操作者：", login, "\n", gtime.Now().String()}, "")
+            utils.SendWechat(wechatContent)
+            dingdingContent := `{"msgtype":"text","text":{"content":"来自云空\n` + wechatContent + ` "}}`
+            utils.SendDingDing(dingdingContent)
+            g.Log().Info(wechatContent)
+        case action == "edited":
+            wechatContent := gstr.Join([]string{repositoryName, " 被编辑了\n操作者：", login, "\n", gtime.Now().String()}, "")
             utils.SendWechat(wechatContent)
             dingdingContent := `{"msgtype":"text","text":{"content":"来自云空\n` + wechatContent + ` "}}`
             utils.SendDingDing(dingdingContent)
