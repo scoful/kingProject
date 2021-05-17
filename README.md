@@ -1,6 +1,11 @@
 # 1. 功能
 1. 一次性的任务提醒，基于server酱的微信推送和基于钉钉群的自定义机器人
-2. 接入github的webhook，处理github项目的事件，比如有人star项目，根据不同事件再推送通知，基于server酱的微信推送和基于钉钉群的自定义机器人
+2. 接入github的webhook，处理github项目的事件，比如有人star项目，根据不同事件再推送通知，基于server酱的微信推送和基于钉钉群的自定义
+   机器人
+3. 接入[alcor](https://docs.alcor.exchange/) 的TLM和WAX兑换价格监控，一小时查询一次，超过设置的阈值就推送通知，基于server酱的微
+   信推送和基于钉钉群的自定义机器人
+4. 接入[coingecko](https://www.coingecko.com/en/api) 的价格查询，目前只hardcode了idena的监控，一小时查询一次，超过RNB1.5就推送
+   通知，基于server酱的微信推送和基于钉钉群的自定义机器人，后续改成数据库接入，方便自定义多个不同币价的监控
 
 # 2. 准备工作
 ## 2.1 获取server酱的微信推送链接
@@ -31,3 +36,6 @@
 
 [goframe官网](https://goframe.org/index)
 
+# 5. TODO
+-   接入mysql
+-   接入vue做前端
