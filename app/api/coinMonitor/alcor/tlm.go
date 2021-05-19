@@ -29,11 +29,16 @@ func HttpGetTlmPrice(result *gmap.Map) {
 		allString := j.ReadAllString()
 		g.Log().Info(allString)
 		x := gjson.New(allString)
-		arrayIndex := g.Cfg().GetString("custom.arrayIndex")
-		result.Set("id", x.GetInt8(gstr.Join([]string{arrayIndex, "id"}, ".")))
-		result.Set("lastPrice", x.GetFloat64(gstr.Join([]string{arrayIndex, "last_price"}, ".")))
-		result.Set("change24", x.GetFloat64(gstr.Join([]string{arrayIndex, "change24"}, ".")))
-		result.Set("name", x.GetString(gstr.Join([]string{arrayIndex, "quote_token", "symbol", "name"}, ".")))
+		y := x.Array()
+		for _, i := range y {
+			z := gjson.New(i)
+			if z.Get("id") != nil && z.GetInt("id") == 26 {
+				result.Set("id", z.GetInt("id"))
+				result.Set("lastPrice", z.GetFloat64("last_price"))
+				result.Set("change24", z.GetFloat64("change24"))
+				result.Set("name", z.GetString("quote_token.symbol.name"))
+			}
+		}
 	}
 }
 

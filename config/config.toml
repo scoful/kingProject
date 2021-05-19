@@ -8,7 +8,6 @@
 [custom]
     wechatUrl   = "xxx" # server酱微信推送连接
     dingdingUrl = "xxx" # 钉钉群自定义机器人链接
-    arrayIndex = 48
     monitorTlmPriceThreshold = 2.0
 [logger]
     path   = "./log"
